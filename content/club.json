@@ -1,0 +1,26 @@
+{
+  "name": "Centro Noturno de Lazer Morro do Querosene",
+  "shortName": "CNLMQ",
+  "foundedYear": 2014,
+  "motto": "Fundado na resenha. Mantido no pastel.",
+  "stadium": {
+    "name": "Campinho do Querosene (exemplo)",
+    "address": "Rua Exemplo, 100, Bairro Exemplo",
+    "mapUrl": null,
+    "notes": "Grama sintética, iluminação que funciona na maior parte das vezes e um bar que fecha antes do segundo tempo."
+  },
+  "history": [
+    "Tudo começou numa sala de aula, quando uma turma de estudos que dividia apostila, café ruim e prazo apertado descobriu que fazia mais gol do que trabalho em grupo. Entre uma prova e outra, o futebol de quinta à noite virou compromisso mais sério do que a faculdade.",
+    "O nome? Um acordo de bar. 'Centro Noturno de Lazer' porque o clube só joga depois do expediente e soa muito mais chique do que 'os caras da quinta'. 'Morro do Querosene' porque, segundo a lenda, o primeiro campinho ficava num morro e todo mundo chegava aceso e saía sem fôlego.",
+    "Os anos passaram, os joelhos reclamaram, os cabelos mudaram de cor ou de lugar, mas a turma continua junta. O CNLMQ não promete título: promete resenha, cerveja gelada pós-jogo (ou guaraná) e a melhor zoeira da região. A taça mais importante sempre foi a amizade (e a de plástico que a gente ganhou em 2019)."
+  ],
+  "contact": {
+    "whatsapp": "5500000000000",
+    "email": "contato@exemplo.com",
+    "instagram": null
+  },
+  "colors": {
+    "primary": "#0071bc",
+    "secondary": "#c7b299"
+  }
+}
