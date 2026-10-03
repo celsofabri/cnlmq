@@ -50,3 +50,26 @@ describe("validação do conteúdo", () => {
     expect(validateMatches(m).join("\n")).toMatch(/competitionName/)
   })
 })
+
+describe("validação de club.json", () => {
+  const { validateClub } = require("../../scripts/content-schema")
+  const withClub = (patch) => validateClub({ ...clone(club), ...patch }).join("\n")
+
+  it("exige endereço do estádio", () => {
+    expect(withClub({ stadium: { name: "X", address: " ", mapUrl: null } })).toMatch(/stadium.address/)
+  })
+
+  it("mapUrl só null ou https", () => {
+    expect(withClub({ stadium: { ...club.stadium, mapUrl: "http://x.com" } })).toMatch(/mapUrl/)
+    expect(withClub({ stadium: { ...club.stadium, mapUrl: "https://maps.example.com/x" } })).toBe("")
+  })
+
+  it("valida handle do instagram", () => {
+    expect(withClub({ contact: { ...club.contact, instagram: "a/b?x" } })).toMatch(/instagram/)
+    expect(withClub({ contact: { ...club.contact, instagram: "@cnlmq_oficial" } })).toBe("")
+  })
+
+  it("rejeita e-mail com ? & #", () => {
+    expect(withClub({ contact: { ...club.contact, email: "a@b.com?bcc=x" } })).toMatch(/email/)
+  })
+})

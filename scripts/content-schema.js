@@ -4,6 +4,7 @@
  * Cada função devolve uma lista de mensagens de erro (vazia = ok).
  */
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+const INSTAGRAM_RE = /^@?[A-Za-z0-9._]{1,30}$/
 const HEX_RE = /^#[0-9a-fA-F]{6}$/
 const ISO_OFFSET_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)$/
 
@@ -24,7 +25,14 @@ function validateClub(club) {
     if (!isNonEmptyString(club[k])) e(`"${k}" é obrigatório`)
   })
   if (!Number.isInteger(club.foundedYear)) e('"foundedYear" deve ser inteiro')
-  if (!isObject(club.stadium) || !isNonEmptyString(club.stadium.name)) e('"stadium.name" é obrigatório')
+  if (!isObject(club.stadium)) e('"stadium" é obrigatório')
+  else {
+    if (!isNonEmptyString(club.stadium.name)) e('"stadium.name" é obrigatório')
+    if (!isNonEmptyString(club.stadium.address)) e('"stadium.address" é obrigatório')
+    if (club.stadium.mapUrl != null && !/^https:\/\//.test(String(club.stadium.mapUrl))) {
+      e('"stadium.mapUrl" deve ser null ou uma URL https://')
+    }
+  }
   if (!Array.isArray(club.history) || club.history.length === 0 || !club.history.every(isNonEmptyString)) {
     e('"history" deve ser uma lista de parágrafos não vazios')
   }
@@ -32,8 +40,10 @@ function validateClub(club) {
   if (!isObject(c)) e('"contact" é obrigatório')
   else {
     if (!/^\d{10,15}$/.test(String(c.whatsapp || ""))) e('"contact.whatsapp" deve ter só dígitos (DDI+DDD+número)')
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(c.email || ""))) e('"contact.email" inválido')
-    if (c.instagram != null && !isNonEmptyString(c.instagram)) e('"contact.instagram" deve ser texto ou null')
+    if (!/^[^@\s?&#]+@[^@\s?&#]+\.[^@\s?&#]+$/.test(String(c.email || ""))) e('"contact.email" inválido')
+    if (c.instagram != null && !INSTAGRAM_RE.test(String(c.instagram))) {
+      e('"contact.instagram" deve ser null ou um handle válido (letras, números, ponto, _; até 30)')
+    }
   }
   return errors
 }
@@ -112,4 +122,4 @@ function validateAll({ club, players, matches }) {
   return [...validateClub(club), ...validatePlayers(players), ...validateMatches(matches)]
 }
 
-module.exports = { validateClub, validatePlayers, validateMatches, validateAll, POSITIONS }
+module.exports = { INSTAGRAM_RE, validateClub, validatePlayers, validateMatches, validateAll, POSITIONS }
