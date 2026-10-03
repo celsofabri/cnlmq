@@ -1,0 +1,5 @@
+import "@fontsource/oswald/latin-500.css"
+import "@fontsource/oswald/latin-700.css"
+import "@fontsource/nunito/latin-400.css"
+import "@fontsource/nunito/latin-700.css"
+import "./src/styles/global.css"
