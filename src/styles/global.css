@@ -48,8 +48,8 @@ h1 { font-size: clamp(2rem, 7vw, 3.25rem); }
 h2 { font-size: clamp(1.5rem, 5vw, 2.1rem); }
 h3 { font-size: 1.25rem; }
 p { margin: 0 0 1em; }
-a { color: var(--azul); text-underline-offset: 3px; }
-a:hover { color: var(--azul-escuro); }
+a { color: var(--azul-escuro); text-underline-offset: 3px; }
+a:hover { color: #004a7c; }
 
 :focus-visible { outline: 3px solid var(--querosene); outline-offset: 3px; box-shadow: 0 0 0 5px var(--grafite); }
 
@@ -103,7 +103,7 @@ a:hover { color: var(--azul-escuro); }
 .site-footer { background: var(--oliva-900); color: var(--branco); margin-top: 3rem; padding: 2rem 0; border-top: 4px solid var(--bege); }
 .site-footer a { color: var(--branco); }
 .site-footer__grid { display: grid; gap: 1.5rem; }
-.site-footer h2 { color: var(--querosene); font-size: 1.1rem; }
+.site-footer h2 { color: #f5c04d; font-size: 1.1rem; } /* 5.4:1 sobre oliva-900 */
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
 .site-footer li a { display: inline-block; min-height: 44px; line-height: 44px; }
 .site-footer small { display: block; margin-top: 1.5rem; opacity: 0.9; }
@@ -230,3 +230,13 @@ a:hover { color: var(--azul-escuro); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ===== Alvos de toque >= 44px e espaçamentos ===== */
+.section__head a, .page-title a, .direct a, .history a, .map-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+}
+.direct { gap: 0; }
+.direct + h2 { margin-top: 2rem; }
+.match__teams, .match__score, .match__top .kicker { margin: 0; }
+.match__score { padding: 0.15rem 0; }
+.notfound a.btn, .empty a.btn { min-height: 48px; }

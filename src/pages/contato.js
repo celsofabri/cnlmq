@@ -52,7 +52,7 @@ export default function ContactPage() {
                 {club.stadium.mapUrl && (
                   <>
                     <br />
-                    <a href={club.stadium.mapUrl} target="_blank" rel="noopener noreferrer">
+                    <a className="map-link" href={club.stadium.mapUrl} target="_blank" rel="noopener noreferrer">
                       Ver no mapa<span className="visually-hidden"> (abre em nova aba)</span>
                     </a>
                   </>
