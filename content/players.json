@@ -1,0 +1,310 @@
+[
+  {
+    "slug": "paredao",
+    "name": "Marcos Exemplo",
+    "nickname": "Paredão",
+    "number": 1,
+    "position": "goleiro",
+    "hometown": "Vila Exemplo",
+    "birthYear": 1988,
+    "preferredFoot": "direito",
+    "bio": "Chamado de Paredão porque, segundo ele, nada passa. Segundo a defesa, quase nada passa porque ele grita demais.",
+    "trivia": "Já defendeu um pênalti sem querer, de costas.",
+    "stats": {
+      "games": 52,
+      "goals": 0,
+      "assists": 1
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#0071bc",
+      "initials": "PA"
+    }
+  },
+  {
+    "slug": "luva-de-pano",
+    "name": "Ricardo Fictício",
+    "nickname": "Luva de Pano",
+    "number": 12,
+    "position": "goleiro",
+    "hometown": "Cidade Modelo",
+    "birthYear": 1995,
+    "preferredFoot": "esquerdo",
+    "bio": "Reserva de luxo que torce em silêncio para o titular ter um dia ruim. Em silêncio mesmo, mais ou menos.",
+    "trivia": "Leva a própria luva e uma toalha para cada jogo, nunca usa a toalha.",
+    "stats": {
+      "games": 14,
+      "goals": 0,
+      "assists": 0
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#998675",
+      "initials": "LP"
+    }
+  },
+  {
+    "slug": "muralha",
+    "name": "Fábio Imaginário",
+    "nickname": "Muralha",
+    "number": 3,
+    "position": "defensor",
+    "hometown": "Vila Exemplo",
+    "birthYear": 1986,
+    "preferredFoot": "direito",
+    "bio": "Zagueiro antigão que já levou mais cartões do que presentes de aniversário. Mas é o dono da área.",
+    "trivia": "Nunca perdeu uma bola dividida, só a conta da pizza.",
+    "stats": {
+      "games": 58,
+      "goals": 3,
+      "assists": 2
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#4c4931",
+      "initials": "MU"
+    }
+  },
+  {
+    "slug": "xerife",
+    "name": "André Genérico",
+    "nickname": "Xerife",
+    "number": 4,
+    "position": "defensor",
+    "hometown": "Cidade Modelo",
+    "birthYear": 1990,
+    "preferredFoot": "direito",
+    "bio": "Organiza a defesa gritando. A defesa organiza a si mesma ignorando.",
+    "trivia": "Só confia em uma coisa: o cronômetro do celular, que ele esquece de ligar.",
+    "stats": {
+      "games": 49,
+      "goals": 2,
+      "assists": 4
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#0071bc",
+      "initials": "XE"
+    }
+  },
+  {
+    "slug": "lateral-turbo",
+    "name": "Diego Aleatório",
+    "nickname": "Turbo",
+    "number": 2,
+    "position": "defensor",
+    "hometown": "Morro Fictício",
+    "birthYear": 1996,
+    "preferredFoot": "direito",
+    "bio": "Sobe pela direita com velocidade impressionante. Volta com velocidade menos impressionante.",
+    "trivia": "Corre 8 km por jogo, 3 km deles para trás.",
+    "stats": {
+      "games": 44,
+      "goals": 4,
+      "assists": 11
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#c7b299",
+      "initials": "TU"
+    }
+  },
+  {
+    "slug": "canhotinha",
+    "name": "Lucas Inventado",
+    "nickname": "Canhotinha",
+    "number": 6,
+    "position": "defensor",
+    "hometown": "Vila Exemplo",
+    "birthYear": 1992,
+    "preferredFoot": "esquerdo",
+    "bio": "Lateral esquerdo cuja perna direita serve só para ficar de pé. A canhota resolve o resto.",
+    "trivia": "Já tentou chutar de direita uma vez, em 2021. Ninguém comenta.",
+    "stats": {
+      "games": 40,
+      "goals": 2,
+      "assists": 8
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#616054",
+      "initials": "CA"
+    }
+  },
+  {
+    "slug": "maestro",
+    "name": "Gustavo Ficção",
+    "nickname": "Maestro",
+    "number": 8,
+    "position": "meio-campista",
+    "hometown": "Cidade Modelo",
+    "birthYear": 1989,
+    "preferredFoot": "direito",
+    "bio": "Cérebro do time: pensa três jogadas à frente. Os companheiros ainda estão na jogada zero.",
+    "trivia": "Já deu um passe tão bonito que ninguém entendeu e saiu pela linha de fundo.",
+    "stats": {
+      "games": 55,
+      "goals": 9,
+      "assists": 21
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#0071bc",
+      "initials": "MA"
+    }
+  },
+  {
+    "slug": "pulmao",
+    "name": "Thiago Anônimo",
+    "nickname": "Pulmão",
+    "number": 5,
+    "position": "meio-campista",
+    "hometown": "Morro Fictício",
+    "birthYear": 1993,
+    "preferredFoot": "direito",
+    "bio": "Corre pelos três volantes juntos. Ainda não descobriu para onde.",
+    "trivia": "É o único que chega ao jogo antes do horário, mas só pelo lanche.",
+    "stats": {
+      "games": 53,
+      "goals": 2,
+      "assists": 7
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#998675",
+      "initials": "PU"
+    }
+  },
+  {
+    "slug": "calculista",
+    "name": "Bruno Qualquer",
+    "nickname": "Calculista",
+    "number": 10,
+    "position": "meio-campista",
+    "hometown": "Vila Exemplo",
+    "birthYear": 1991,
+    "preferredFoot": "ambidestro",
+    "bio": "Faz as contas da tabela do campeonato com precisão. Erra as contas da vaquinha do churrasco.",
+    "trivia": "Usa uma planilha para decidir a escalação e, depois, ignora a planilha.",
+    "stats": {
+      "games": 47,
+      "goals": 12,
+      "assists": 15
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#4c4931",
+      "initials": "CL"
+    }
+  },
+  {
+    "slug": "relampago",
+    "name": "Felipe Comum",
+    "nickname": "Relâmpago",
+    "number": 7,
+    "position": "meio-campista",
+    "hometown": "Cidade Modelo",
+    "birthYear": 1998,
+    "preferredFoot": "esquerdo",
+    "bio": "O caçula do grupo. Rápido como um relâmpago, mas cansa como uma lâmpada queimada no segundo tempo.",
+    "trivia": "Tem a única bola de couro do time e não empresta.",
+    "stats": {
+      "games": 36,
+      "goals": 7,
+      "assists": 9
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#c7b299",
+      "initials": "RE"
+    }
+  },
+  {
+    "slug": "matador",
+    "name": "Rafael Sample",
+    "nickname": "Matador",
+    "number": 9,
+    "position": "atacante",
+    "hometown": "Morro Fictício",
+    "birthYear": 1990,
+    "preferredFoot": "direito",
+    "bio": "Artilheiro que marca de qualquer ângulo, desde que a bola esteja parada, o goleiro distraído e o juiz de bom humor.",
+    "trivia": "Comemora todo gol como se fosse final de Copa, inclusive os de treino.",
+    "stats": {
+      "games": 56,
+      "goals": 38,
+      "assists": 6
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#0071bc",
+      "initials": "MT"
+    }
+  },
+  {
+    "slug": "gol-de-placa",
+    "name": "Eduardo Teste",
+    "nickname": "Gol de Placa",
+    "number": 11,
+    "position": "atacante",
+    "hometown": "Vila Exemplo",
+    "birthYear": 1994,
+    "preferredFoot": "esquerdo",
+    "bio": "Já fez um golaço de bicicleta. Está esperando o próximo desde então.",
+    "trivia": "Tem o golaço de bicicleta filmado em três ângulos (todos tremidos).",
+    "stats": {
+      "games": 45,
+      "goals": 22,
+      "assists": 10
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#998675",
+      "initials": "GP"
+    }
+  },
+  {
+    "slug": "cabecinha",
+    "name": "Henrique Padrão",
+    "nickname": "Cabecinha",
+    "number": 19,
+    "position": "atacante",
+    "hometown": "Cidade Modelo",
+    "birthYear": 1987,
+    "preferredFoot": "direito",
+    "bio": "Centroavante boleiro de área, cabeceador por vocação e por falta de outra opção.",
+    "trivia": "Já fez gol de cabeça, de peito e de barriga. De pé, só em sonho.",
+    "stats": {
+      "games": 50,
+      "goals": 17,
+      "assists": 3
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#616054",
+      "initials": "CB"
+    }
+  },
+  {
+    "slug": "coringa",
+    "name": "Vitor Demonstração",
+    "nickname": "Coringa",
+    "number": 14,
+    "position": "atacante",
+    "hometown": "Morro Fictício",
+    "birthYear": 1999,
+    "preferredFoot": "ambidestro",
+    "bio": "Joga em qualquer posição, sem jogar bem em nenhuma. O técnico o chama de 'versatilidade'.",
+    "trivia": "Já jogou de goleiro, de lateral e de árbitro (sem querer).",
+    "stats": {
+      "games": 33,
+      "goals": 11,
+      "assists": 8
+    },
+    "avatar": {
+      "type": "generated",
+      "bg": "#4c4931",
+      "initials": "CO"
+    }
+  }
+]
