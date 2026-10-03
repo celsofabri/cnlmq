@@ -53,8 +53,21 @@ Paleta do logo (`--azul #0071bc`, `--bege #c7b299`, `--oliva-900 #4c4931`, `--gr
 
 ## Deploy
 
-Publicação em GitHub Pages (project site) em `https://celsofabri.github.io/cnlmq/`, via **GitHub Actions** (o workflow é criado e mantido à parte; este repo não usa `gh-pages`). O workflow deve rodar `yarn install --frozen-lockfile`, `yarn lint`, `yarn test` e `yarn build` (que já usa `--prefix-paths`) e publicar a pasta `public/`, que é artefato de build e não é versionada. Variável opcional `SITE_URL` muda o domínio usado em canonical/OG/sitemap (padrão `https://celsofabri.github.io`).
-Como o site é estático, o "próximo jogo" pode envelhecer até o próximo deploy: o navegador reavalia pela data atual, e um build agendado diário no CI ajuda.
+URL final: **https://celsofabri.github.io/cnlmq/** (GitHub Pages, project site). A publicação é feita por **GitHub Actions** (`.github/workflows/ci-cd.yml`); este repo não usa mais a branch `gh-pages`.
+
+### Como funciona o CI/CD
+
+- **Gatilhos:** `push` na `master`, `pull_request` para a `master`, `workflow_dispatch` (botão "Run workflow") e `schedule` diário (06:00 UTC), que reconstrói o site para atualizar o "próximo jogo".
+- **Job `build`** (roda em todos os gatilhos): Node 22 (LTS; o Gatsby 5 aceita `>=18 <26`) com cache do yarn, `yarn install --frozen-lockfile`, `yarn lint`, `yarn test` e `yarn build` (que já usa `--prefix-paths`). Fora de PR, publica `./public` como artefato do Pages.
+- **Job `deploy`:** só em push/dispatch/schedule na `master`, depois do `build`. Usa `actions/deploy-pages` com permissões mínimas (`pages: write`, `id-token: write`), environment `github-pages` e `concurrency` group `pages` sem cancelar deploy em andamento.
+- PRs só validam (lint, testes, build); nunca publicam.
+- Pré-requisito único no GitHub: Settings > Pages > Source = **GitHub Actions**.
+
+### Ajustar `SITE_URL`
+
+`SITE_URL` define o domínio usado em canonical, Open Graph e sitemap (padrão `https://celsofabri.github.io`; o `/cnlmq` é acrescentado pelo `pathPrefix`). Para mudar (ex.: domínio próprio), crie a variável de repositório em Settings > Secrets and variables > Actions > Variables > `SITE_URL` (ex.: `https://www.exemplo.com.br`); o workflow a repassa ao build. Se usar domínio próprio na raiz, remova também o `pathPrefix` em `gatsby-config.js`. Localmente: `SITE_URL=https://... yarn build`.
+
+Como o site é estático, o "próximo jogo" pode envelhecer até o próximo deploy: o navegador reavalia pela data atual, e o build agendado diário cobre o resto.
 
 ## Notas de dependências
 
