@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+# CNLMQ - Centro Noturno de Lazer Morro do Querosene
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Site estático do time, feito com React 18 + Gatsby 5. Home, Jogos, Elenco (com página por jogador), Contato e 404.
+Especificação: [`docs/spec.md`](docs/spec.md). Todo o conteúdo de exemplo é **fictício**: troque pelos dados reais antes de divulgar.
 
-## Available Scripts
+## Como rodar
 
-In the project directory, you can run:
+Requisitos: Node 18.19+ (testado em Node 24) e Yarn 1.
 
-### `yarn start`
+```bash
+yarn install
+yarn develop        # http://localhost:8000 (sem prefixo)
+yarn test           # Jest + React Testing Library
+yarn lint           # ESLint
+yarn validate       # valida content/*.json sem rodar o build
+yarn build          # build de produção com --prefix-paths (pathPrefix /cnlmq)
+yarn serve          # serve o build em http://localhost:9000/cnlmq/
+yarn build:local    # build sem prefixo (para conferir que tudo funciona nos dois modos)
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Como editar o conteúdo
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Tudo fica em `content/`, sem painel nem banco. Edite, faça commit e push.
 
-### `yarn test`
+- `club.json`: nome, lema, estádio, história (lista de parágrafos), contato (`whatsapp` só com dígitos: DDI+DDD+número; `email`; `instagram` ou `null`).
+- `players.json`: um objeto por jogador (`slug` único em kebab-case sem acento, `number` único de 1 a 99, `position`: `goleiro | defensor | meio-campista | atacante`, `avatar` com `initials` e `bg`). `trivia` e `stats` são opcionais.
+- `matches.json`: um objeto por partida. `date` em ISO com offset (`2026-10-10T20:30:00-03:00`). Partida `finalizado` exige `score`; `agendado` não tem `score`; `campeonato` exige `competitionName`.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+O build **falha com mensagem clara** se algo estiver inválido (slug/id duplicado, número repetido, data inválida, placar faltando...). As regras estão em `scripts/content-schema.js`.
 
-### `yarn build`
+Para trocar o conteúdo de um jogo depois de ele acontecer: mude `status` para `finalizado`, adicione `score` e publique. O "próximo jogo" é calculado no build e reavaliado no navegador.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Estrutura
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+content/            dados em JSON (club, players, matches)
+scripts/            validação do conteúdo, gerador do og-image
+src/cnlmq.svg       logo (fonte da identidade visual e dos ícones)
+src/pages/          index, jogos, elenco, contato, 404
+src/templates/      player.js (uma página por jogador, criada em gatsby-node.js)
+src/components/     Layout, Seo, MatchCard, PlayerCard, Avatar, filtros, formulário
+src/lib/            funções puras (datas, jogos, elenco, contato, avatar) com testes
+src/styles/         global.css com os tokens de cor/fonte
+static/             og-image.png (gerado por `yarn icons`)
+gatsby-node.js      valida conteúdo, cria /elenco/<slug>/, gera sitemap.xml e robots.txt
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Decisões: os JSONs são importados direto pelo código e lidos pelo `gatsby-node.js` (sem GraphQL de dados: mais simples e robusto). Ícones e favicon são gerados no build pelo `gatsby-plugin-manifest` a partir de `src/cnlmq.svg`. Fontes (Oswald e Nunito) são auto-hospedadas via `@fontsource`, sem CDN.
 
-### `yarn eject`
+### Acessibilidade e contraste
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Paleta do logo (`--azul #0071bc`, `--bege #c7b299`, `--oliva-900 #4c4931`, `--grafite #333`...). Contrastes medidos: branco sobre azul 5.1:1; azul sobre fundo `#f6f2ec` 4.6:1; `#4c4931` sobre o fundo 8.2:1. Pontos de atenção: `#998675` (3.1:1) só decorativo, por isso o texto secundário usa `#5d5340` (6.8:1); `#4c4931` sobre bege `#c7b299` dá só 4.45:1, então nesse fundo o texto é grafite. O amarelo "querosene" `#e8a317` sempre leva texto grafite.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Deploy
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Publicação em GitHub Pages (project site) em `https://celsofabri.github.io/cnlmq/`, via GitHub Actions (workflow mantido à parte; este repo não usa mais `gh-pages`). O build de produção é `yarn build` (usa `--prefix-paths`) e gera a pasta `public/`. Variável opcional `SITE_URL` muda o domínio usado em canonical/OG/sitemap (padrão `https://celsofabri.github.io`).
+Como o site é estático, o "próximo jogo" pode envelhecer até o próximo deploy: o navegador reavalia pela data atual, e um build agendado diário no CI ajuda.
