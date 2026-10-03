@@ -2,25 +2,32 @@ const fs = require("fs")
 const path = require("path")
 const { validateAll } = require("./scripts/content-schema")
 
-const readJson = (name) => JSON.parse(fs.readFileSync(path.join(__dirname, "content", `${name}.json`), "utf8"))
+const readJson = (name, reporter) => {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(__dirname, "content", `${name}.json`), "utf8"))
+  } catch (err) {
+    const msg = `content/${name}.json: JSON inválido: ${err.message}`
+    if (reporter) reporter.panic(msg)
+    throw new Error(msg)
+  }
+}
 
-const loadContent = () => ({
-  club: readJson("club"),
-  players: readJson("players"),
-  matches: readJson("matches"),
+const loadContent = (reporter) => ({
+  club: readJson("club", reporter),
+  players: readJson("players", reporter),
+  matches: readJson("matches", reporter),
 })
 
 /** Falha o build se o conteúdo for inválido (slug duplicado, placar faltando etc.). */
 exports.onPreBootstrap = ({ reporter }) => {
-  const errors = validateAll(loadContent())
+  const errors = validateAll(loadContent(reporter))
   if (errors.length) {
     reporter.panic(`Conteúdo inválido em content/*.json:\n${errors.map((e) => `  - ${e}`).join("\n")}`)
   }
-  reporter.info(`Conteúdo validado (${errors.length} erros).`)
 }
 
-exports.createPages = ({ actions }) => {
-  const { players } = loadContent()
+exports.createPages = ({ actions, reporter }) => {
+  const { players } = loadContent(reporter)
   players.forEach((player) => {
     actions.createPage({
       path: `/elenco/${player.slug}/`,
