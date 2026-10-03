@@ -53,5 +53,10 @@ Paleta do logo (`--azul #0071bc`, `--bege #c7b299`, `--oliva-900 #4c4931`, `--gr
 
 ## Deploy
 
-Publicação em GitHub Pages (project site) em `https://celsofabri.github.io/cnlmq/`, via GitHub Actions (workflow mantido à parte; este repo não usa mais `gh-pages`). O build de produção é `yarn build` (usa `--prefix-paths`) e gera a pasta `public/`. Variável opcional `SITE_URL` muda o domínio usado em canonical/OG/sitemap (padrão `https://celsofabri.github.io`).
+Publicação em GitHub Pages (project site) em `https://celsofabri.github.io/cnlmq/`, via **GitHub Actions** (o workflow é criado e mantido à parte; este repo não usa `gh-pages`). O workflow deve rodar `yarn install --frozen-lockfile`, `yarn lint`, `yarn test` e `yarn build` (que já usa `--prefix-paths`) e publicar a pasta `public/`, que é artefato de build e não é versionada. Variável opcional `SITE_URL` muda o domínio usado em canonical/OG/sitemap (padrão `https://celsofabri.github.io`).
 Como o site é estático, o "próximo jogo" pode envelhecer até o próximo deploy: o navegador reavalia pela data atual, e um build agendado diário no CI ajuda.
+
+## Notas de dependências
+
+- O ESLint usa `@babel/preset-env`/`@babel/preset-react` (^7) com `configFile: false`, porque `babel-preset-gatsby` não carrega fora do Gatsby CLI.
+- `sharp` aparece duas vezes no `node_modules`: a cópia do `gatsby-sharp` (usada no build) e a do `package.json` (devDependency só para `yarn icons`). É esperado; se atrapalhar o CI, o script `yarn icons` pode ser removido, pois `static/og-image.png` já está versionado.

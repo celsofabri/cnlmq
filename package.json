@@ -29,8 +29,8 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.29.9",
-    "@babel/preset-env": "^8.0.6",
-    "@babel/preset-react": "^8.0.1",
+    "@babel/preset-env": "^7",
+    "@babel/preset-react": "^7",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^14",
     "@testing-library/user-event": "^14",
