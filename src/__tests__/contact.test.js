@@ -16,6 +16,15 @@ describe("contato", () => {
     expect(decodeURIComponent(url.split("&body=")[1])).toContain("Oi\ntime")
   })
 
+  it("não monta mailto para e-mail inválido", () => {
+    expect(buildMailtoUrl("a@b.com?bcc=x@y.com", "Ana", "Oi")).toBeNull()
+    expect(buildMailtoUrl("a@b.com&x", "Ana", "Oi")).toBeNull()
+  })
+
+  it("instagram inválido não gera URL", () => {
+    expect(buildInstagramUrl("foo/bar?x=1")).toBeNull()
+  })
+
   it("valida campos vazios", () => {
     expect(validateContact({ name: " ", message: "" })).toEqual({
       name: expect.any(String),

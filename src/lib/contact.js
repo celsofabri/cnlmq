@@ -1,3 +1,6 @@
+export const EMAIL_RE = /^[^@\s?&#]+@[^@\s?&#]+\.[^@\s?&#]+$/
+export const INSTAGRAM_RE = /^@?[A-Za-z0-9._]{1,30}$/
+
 const clean = (s) => String(s || "").trim()
 
 /** { name, message } -> { name?: string, message?: string } (vazio = válido) */
@@ -18,10 +21,14 @@ export function buildWhatsAppUrl(number, name, message) {
 }
 
 export function buildMailtoUrl(email, name, message) {
+  if (!isValidEmail(email)) return null
   const subject = `Contato pelo site do CNLMQ - ${clean(name)}`
   const body = `${clean(message)}\n\n-- ${clean(name)}`
   return `mailto:${clean(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
 
 export const buildInstagramUrl = (handle) =>
-  handle ? `https://instagram.com/${String(handle).replace(/^@/, "")}` : null
+  handle && INSTAGRAM_RE.test(String(handle)) ? `https://instagram.com/${String(handle).replace(/^@/, "")}` : null
+
+/** Só devolve mailto: para e-mails válidos (sem ?, & ou # que quebrariam a URL). */
+export const isValidEmail = (email) => EMAIL_RE.test(clean(email))

@@ -23,7 +23,12 @@ export function ContactForm({ whatsapp, email, onOpenUrl }) {
       open(buildWhatsAppUrl(whatsapp, values.name, values.message), true)
       setStatus("Abrindo o WhatsApp em uma nova aba.")
     } else {
-      open(buildMailtoUrl(email, values.name, values.message), false)
+      const mailto = buildMailtoUrl(email, values.name, values.message)
+      if (!mailto) {
+        setStatus("O e-mail do clube está indisponível. Use o WhatsApp.")
+        return
+      }
+      open(mailto, false)
       setStatus("Abrindo o seu aplicativo de e-mail.")
     }
   }
