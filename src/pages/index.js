@@ -87,7 +87,7 @@ export default function HomePage() {
               </Magnetic>
             </div>
           </div>
-          <div className="hero__logo-wrap" aria-hidden="false">
+          <div className="hero__logo-wrap">
             <div className="hero__flame" aria-hidden="true" />
             <img className="hero__logo" src={logo} alt="Escudo do CNLMQ" width="320" height="381" />
           </div>
@@ -194,16 +194,20 @@ export default function HomePage() {
               Ver elenco completo
             </Link>
           </Reveal>
-          <ul className="grid grid--3 list">
-            {scorers.map((p, i) => (
-              <Reveal as="li" key={p.slug} delay={i * 120}>
-                <PlayerCard player={p} />
-                <p className="goals-tag">
-                  <CountUp value={p.stats.goals} /> gols
-                </p>
-              </Reveal>
-            ))}
-          </ul>
+          {/* região rolável focável por teclado (setas) no mobile; vira grade no desktop (axe: scrollable-region-focusable) */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+          <div className="carousel" role="region" aria-label="Artilheiros (deslize para ver todos)" tabIndex={0}>
+            <ul className="carousel__list list">
+              {scorers.map((p, i) => (
+                <Reveal as="li" key={p.slug} delay={i * 120}>
+                  <PlayerCard player={p} />
+                  <p className="goals-tag">
+                    <CountUp value={p.stats.goals} /> gols
+                  </p>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -224,7 +228,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {club.sponsors && <Marquee items={club.sponsors} reverse label="Patrocinadores (fictícios)" />}
+      {club.sponsors?.length > 0 && <Marquee items={club.sponsors} reverse label="Patrocinadores (fictícios)" />}
 
       <section className="section cta" aria-labelledby="cta-titulo">
         <div className="container">

@@ -40,7 +40,7 @@ body {
   overflow-wrap: anywhere;
   overflow-x: hidden;
 }
-body.menu-open { overflow: hidden; }
+@media (max-width: 819px) { body.menu-open { overflow: hidden; } }
 img, svg, canvas { max-width: 100%; }
 h1, h2, h3 { margin: 0 0 0.5em; line-height: 1.05; font-weight: 400; }
 h3 { font-family: var(--font-title); font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; font-size: 1.3rem; }
@@ -62,7 +62,7 @@ ul, ol { padding: 0; }
 }
 
 .container { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 20px; }
-.section { padding: clamp(3rem, 8vw, 6rem) 0; position: relative; }
+.section { padding: clamp(2.2rem, 7vw, 6rem) 0; position: relative; }
 .muted { color: var(--muted); }
 .small { font-size: 0.9rem; }
 .lead { font-size: clamp(1.1rem, 2.4vw, 1.35rem); max-width: 60ch; }
@@ -78,7 +78,7 @@ ul, ol { padding: 0; }
   color: var(--text);
   overflow-wrap: normal;
 }
-.display--xl { font-size: clamp(3.6rem, 16vw, 10rem); line-height: 0.9; margin-bottom: 0.15em; text-shadow: 0 0 60px rgba(255, 176, 46, 0.25); }
+.display--xl { font-size: clamp(3.6rem, 16vw, 10rem); line-height: 0.95; margin-bottom: 0.2em; text-shadow: 0 0 60px rgba(255, 176, 46, 0.25); }
 .display--lg { font-size: clamp(3rem, 12vw, 7rem); }
 .display--md { font-size: clamp(1.9rem, 5.5vw, 3.2rem); }
 .display--sm { font-size: 1.7rem; }
