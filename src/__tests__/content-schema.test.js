@@ -22,6 +22,14 @@ describe("validação do conteúdo", () => {
     expect(validatePlayers(p).join("\n")).toMatch(/repetido/)
   })
 
+  it("valida atributos opcionais (0-99)", () => {
+    const p = clone(players)
+    p[0].attributes.pace = 120
+    expect(validatePlayers(p).join("\n")).toMatch(/attributes/)
+    delete p[0].attributes
+    expect(validatePlayers(p)).toEqual([])
+  })
+
   it("aceita jogador sem trivia e sem stats", () => {
     const p = clone(players)
     p[0].trivia = null

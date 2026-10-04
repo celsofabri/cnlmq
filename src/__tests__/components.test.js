@@ -1,5 +1,5 @@
 import React from "react"
-import { render, screen, within } from "@testing-library/react"
+import { act, render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { useStaticQuery } from "gatsby"
 import { RosterBrowser } from "../components/RosterBrowser"
@@ -9,6 +9,12 @@ import { Layout } from "../components/Layout"
 import { MatchCard } from "../components/MatchCard"
 import { Avatar } from "../components/Avatar"
 import HomePage from "../pages/index"
+import { Pitch } from "../components/Pitch"
+import { Countdown } from "../components/fx/Countdown"
+import { CountUp } from "../components/fx/CountUp"
+import { FormDots } from "../components/fx/FormDots"
+import { Marquee } from "../components/fx/Marquee"
+import { Radar } from "../components/fx/Radar"
 import players from "../../content/players.json"
 import matches from "../../content/matches.json"
 
@@ -58,7 +64,7 @@ describe("MatchCard", () => {
   it("mostra placar com badge V/E/D em texto", () => {
     render(<MatchCard match={matches[0]} />)
     expect(screen.getByText("V - Vitória")).toBeInTheDocument()
-    expect(screen.getByText("4 x 2")).toBeInTheDocument()
+    expect(screen.getByText("Placar:", { exact: false }).closest("p")).toHaveTextContent(/4.*2/)
   })
 })
 
@@ -106,7 +112,7 @@ describe("Layout", () => {
     expect(screen.getByRole("main")).toHaveAttribute("id", "conteudo")
     expect(screen.getByRole("banner")).toBeInTheDocument()
     expect(screen.getByRole("contentinfo")).toBeInTheDocument()
-    const toggle = screen.getByRole("button", { name: /Menu/ })
+    const toggle = screen.getByRole("button", { name: "Abrir menu de navegação" })
     expect(toggle).toHaveAttribute("aria-expanded", "false")
     await userEvent.click(toggle)
     expect(toggle).toHaveAttribute("aria-expanded", "true")
@@ -121,6 +127,64 @@ describe("Home", () => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
     const next = screen.getByRole("region", { name: "Próximo jogo" })
     expect(within(next).getByText(/Bar do Zé FC/)).toBeInTheDocument()
-    expect(within(screen.getByRole("region", { name: "Último resultado" })).getByText("5 x 1")).toBeInTheDocument()
+    expect(within(screen.getByRole("region", { name: "Último resultado" })).getByText("Placar:", { exact: false }).closest("p")).toHaveTextContent(/5.*1/)
+  })
+})
+
+describe("Pitch (escalação)", () => {
+  it("mostra 11 titulares + banco e troca de formação", async () => {
+    render(<Pitch players={players} />)
+    expect(screen.getAllByRole("link").filter((a) => a.classList.contains("pitch__player"))).toHaveLength(11)
+    expect(screen.getAllByRole("link").filter((a) => a.classList.contains("bench__item"))).toHaveLength(3)
+    expect(screen.getByRole("button", { name: "4-3-3" })).toHaveAttribute("aria-pressed", "true")
+    await userEvent.click(screen.getByRole("button", { name: "4-4-2" }))
+    expect(screen.getByRole("button", { name: "4-4-2" })).toHaveAttribute("aria-pressed", "true")
+    expect(screen.getByRole("status")).toHaveTextContent("Formação 4-4-2: 11 titulares e 3 reservas.")
+  })
+
+  it("jogadores levam à página do jogador", () => {
+    render(<Pitch players={players} />)
+    expect(screen.getByRole("link", { name: /Matador/ })).toHaveAttribute("href", "/cnlmq/elenco/matador/")
+  })
+})
+
+describe("Countdown", () => {
+  afterEach(() => jest.useRealTimers())
+
+  it("conta ao vivo e avisa leitores de tela por minuto", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-10-09T20:30:00-03:00"))
+    render(<Countdown target="2026-10-10T20:30:00-03:00" />)
+    expect(screen.getByText("Faltam 1 dia, 0 horas e 0 minutos.")).toBeInTheDocument()
+    act(() => jest.advanceTimersByTime(60000))
+    expect(screen.getByText("Faltam 0 dias, 23 horas e 59 minutos.")).toBeInTheDocument()
+  })
+
+  it("mostra mensagem quando o jogo começou", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-10-10T21:00:00-03:00"))
+    render(<Countdown target="2026-10-10T20:30:00-03:00" />)
+    expect(screen.getByRole("status")).toHaveTextContent("Hora do jogo!")
+  })
+})
+
+describe("efeitos", () => {
+  it("CountUp expõe o valor final para leitores de tela e sem IntersectionObserver", () => {
+    const { container } = render(<CountUp value={15} />)
+    expect(container).toHaveTextContent("1515")
+    expect(container.querySelector(".visually-hidden")).toHaveTextContent("15")
+  })
+
+  it("FormDots rotula V/E/D em texto", () => {
+    render(<FormDots form={["V", "E", "D"]} />)
+    expect(screen.getByRole("list", { name: /Vitória, Empate, Derrota/ })).toBeInTheDocument()
+  })
+
+  it("Marquee esconde a cópia duplicada dos leitores de tela", () => {
+    const { container } = render(<Marquee items={["A", "B"]} label="Teste" />)
+    expect(container.querySelectorAll('[aria-hidden="true"].marquee__row')).toHaveLength(1)
+  })
+
+  it("Radar descreve os atributos", () => {
+    render(<Radar title="Atributos de X" attributes={players[0].attributes} />)
+    expect(screen.getByRole("img", { name: /Atributos de X: Ritmo \d+/ })).toBeInTheDocument()
   })
 })
