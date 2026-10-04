@@ -1,15 +1,18 @@
-import React from "react"
-import { formatDateTime, toDateTimeAttr } from "../lib/format"
+import React, { useRef } from "react"
+import { formatDate, formatTime, toDateTimeAttr } from "../lib/format"
 import { OUTCOME_LABEL, competitionLabel, getOutcome } from "../lib/matches"
 import { club } from "../lib/data"
+import { CountUp } from "./fx/CountUp"
+import { useTilt } from "./fx/useTilt"
 
 export function MatchCard({ match, highlight = false, heading = "h3" }) {
   const H = heading
+  const ref = useRef(null)
+  useTilt(ref, 2)
   const outcome = getOutcome(match)
-  const scoreText = match.score ? `${match.score.us} x ${match.score.them}` : null
   return (
-    <article className={`card match${highlight ? " card--accent" : ""}`}>
-      <div className="match__top">
+    <article ref={ref} className={`mcard${highlight ? " mcard--highlight" : ""}${outcome ? ` mcard--${outcome}` : ""}`}>
+      <div className="mcard__top">
         <p className="kicker">{competitionLabel(match)}</p>
         {outcome && (
           <span className={`badge badge--${outcome}`}>
@@ -17,23 +20,28 @@ export function MatchCard({ match, highlight = false, heading = "h3" }) {
           </span>
         )}
       </div>
-      <H className="match__teams">
-        {club.shortName} x {match.opponent}
+      <H className="mcard__teams">
+        <span>{club.shortName}</span> <span className="mcard__vs">x</span> <span>{match.opponent}</span>
       </H>
-      {scoreText && (
-        <p className="match__score">
+      {match.score && (
+        <p className="mcard__score">
           <span className="visually-hidden">Placar: </span>
-          {scoreText}
+          <CountUp value={match.score.us} duration={900} />
+          <span aria-hidden="true" className="mcard__sep">
+            x
+          </span>
+          <span className="visually-hidden"> a </span>
+          <CountUp value={match.score.them} duration={900} />
         </p>
       )}
-      <p className="match__meta">
-        <time dateTime={toDateTimeAttr(match.date)}>{formatDateTime(match.date)}</time>
-        {" · "}
-        {match.venue}
-        {" · "}
-        {match.home ? "Em casa" : "Fora"}
+      <p className="mcard__meta">
+        <time dateTime={toDateTimeAttr(match.date)}>
+          {formatDate(match.date)} <span aria-hidden="true">·</span> {formatTime(match.date)}
+        </time>
+        <span className="mcard__chip">{match.venue}</span>
+        <span className="mcard__chip">{match.home ? "Em casa" : "Fora"}</span>
       </p>
-      {match.notes && <p className="match__notes">{match.notes}</p>}
+      {match.notes && <p className="mcard__notes">{match.notes}</p>}
     </article>
   )
 }
