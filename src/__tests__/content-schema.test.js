@@ -22,6 +22,19 @@ describe("validação do conteúdo", () => {
     expect(validatePlayers(p).join("\n")).toMatch(/repetido/)
   })
 
+  it("rejeita atributos parciais, desconhecidos, não inteiros e negativos", () => {
+    const base = clone(players)
+    const run = (mutate) => {
+      const p = clone(base)
+      mutate(p[0].attributes)
+      return validatePlayers(p).join("\n")
+    }
+    expect(run((a) => delete a.heart)).toMatch(/attributes/)
+    expect(run((a) => (a.speed = 50))).toMatch(/desconhecidas: speed/)
+    expect(run((a) => (a.pace = 50.5))).toMatch(/attributes/)
+    expect(run((a) => (a.pace = -1))).toMatch(/attributes/)
+  })
+
   it("valida atributos opcionais (0-99)", () => {
     const p = clone(players)
     p[0].attributes.pace = 120
@@ -79,5 +92,23 @@ describe("validação de club.json", () => {
 
   it("rejeita e-mail com ? & #", () => {
     expect(withClub({ contact: { ...club.contact, email: "a@b.com?bcc=x" } })).toMatch(/email/)
+  })
+})
+
+describe("sponsors e historyLabels", () => {
+  const { validateClub } = require("../../scripts/content-schema")
+  const withClub = (patch) => validateClub({ ...clone(club), ...patch }).join("\n")
+
+  it("sponsors vazio falha; ausente ou com itens passa", () => {
+    expect(withClub({ sponsors: [] })).toMatch(/sponsors/)
+    expect(withClub({ sponsors: [" "] })).toMatch(/sponsors/)
+    expect(withClub({ sponsors: undefined })).toBe("")
+    expect(withClub({ sponsors: ["Zé"] })).toBe("")
+  })
+
+  it("historyLabels: excesso e repetição falham", () => {
+    expect(withClub({ historyLabels: ["a", "b", "c", "d"] })).toMatch(/mais itens/)
+    expect(withClub({ historyLabels: ["a", "a"] })).toMatch(/repetidos/)
+    expect(withClub({ historyLabels: ["a", "b"] })).toBe("")
   })
 })

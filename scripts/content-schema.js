@@ -37,11 +37,18 @@ function validateClub(club) {
   if (!Array.isArray(club.history) || club.history.length === 0 || !club.history.every(isNonEmptyString)) {
     e('"history" deve ser uma lista de parágrafos não vazios')
   }
-  if (club.historyLabels != null && (!Array.isArray(club.historyLabels) || !club.historyLabels.every(isNonEmptyString))) {
-    e('"historyLabels" deve ser uma lista de textos')
+  if (club.historyLabels != null) {
+    const labels = club.historyLabels
+    if (!Array.isArray(labels) || !labels.every(isNonEmptyString)) e('"historyLabels" deve ser uma lista de textos')
+    else {
+      if (Array.isArray(club.history) && labels.length > club.history.length) {
+        e('"historyLabels" não pode ter mais itens que "history"')
+      }
+      if (new Set(labels).size !== labels.length) e('"historyLabels" não pode ter rótulos repetidos')
+    }
   }
-  if (club.sponsors != null && (!Array.isArray(club.sponsors) || !club.sponsors.every(isNonEmptyString))) {
-    e('"sponsors" deve ser uma lista de textos')
+  if (club.sponsors != null && (!Array.isArray(club.sponsors) || club.sponsors.length === 0 || !club.sponsors.every(isNonEmptyString))) {
+    e('"sponsors" deve ter ao menos 1 texto (ou omita o campo)')
   }
   const c = club.contact
   if (!isObject(c)) e('"contact" é obrigatório')
@@ -85,12 +92,16 @@ function validatePlayers(players) {
       }
     }
     if (p.attributes != null) {
-      if (!isObject(p.attributes) || !ATTRIBUTE_KEYS.every((k) => Number.isInteger(p.attributes[k]) && p.attributes[k] >= 0 && p.attributes[k] <= 99)) {
+      const a = p.attributes
+      const unknown = isObject(a) ? Object.keys(a).filter((k) => !ATTRIBUTE_KEYS.includes(k)) : []
+      if (!isObject(a) || !ATTRIBUTE_KEYS.every((k) => Number.isInteger(a[k]) && a[k] >= 0 && a[k] <= 99)) {
         e(`attributes deve ter ${ATTRIBUTE_KEYS.join(", ")} inteiros entre 0 e 99`)
+      } else if (unknown.length) {
+        e(`attributes tem chaves desconhecidas: ${unknown.join(", ")}`)
       }
     }
-    const a = p.avatar
-    if (!isObject(a) || a.type !== "generated" || !HEX_RE.test(String(a.bg)) || !/^\p{L}{1,3}$/u.test(String(a.initials))) {
+    const av = p.avatar
+    if (!isObject(av) || av.type !== "generated" || !HEX_RE.test(String(av.bg)) || !/^\p{L}{1,3}$/u.test(String(av.initials))) {
       e('avatar deve ser { type: "generated", bg: "#hex", initials: "XX" }')
     }
   })
