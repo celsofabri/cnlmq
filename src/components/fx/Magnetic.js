@@ -7,18 +7,25 @@ export function Magnetic({ children, strength = 0.3 }) {
   useEffect(() => {
     const el = ref.current
     if (!el || prefersReducedMotion() || !canHover()) return undefined
+    let raf = 0
     const move = (e) => {
-      const r = el.getBoundingClientRect()
-      const dx = e.clientX - (r.left + r.width / 2)
-      const dy = e.clientY - (r.top + r.height / 2)
-      el.style.transform = `translate(${dx * strength}px, ${dy * strength}px)`
+      const { clientX, clientY } = e
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect()
+        const dx = clientX - (r.left + r.width / 2)
+        const dy = clientY - (r.top + r.height / 2)
+        el.style.transform = `translate(${dx * strength}px, ${dy * strength}px)`
+      })
     }
     const reset = () => {
+      cancelAnimationFrame(raf)
       el.style.transform = ""
     }
     el.addEventListener("pointermove", move)
     el.addEventListener("pointerleave", reset)
     return () => {
+      cancelAnimationFrame(raf)
       el.removeEventListener("pointermove", move)
       el.removeEventListener("pointerleave", reset)
     }

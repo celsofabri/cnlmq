@@ -13,14 +13,14 @@ export function ContactForm({ whatsapp, email, onOpenUrl }) {
   const timers = useRef([])
 
   useEffect(() => {
-    const list = timers.current
-    return () => list.forEach(clearTimeout)
+    return () => timers.current.forEach(clearTimeout)
   }, [])
 
   const open = onOpenUrl || ((url, external) => (external ? window.open(url, "_blank", "noopener,noreferrer") : (window.location.href = url)))
   const set = (key) => (e) => setValues((v) => ({ ...v, [key]: e.target.value }))
 
   const submit = (kind) => {
+    if (kind === "whatsapp" && phase !== "idle") return // evita abrir duas abas
     const found = validateContact(values)
     setErrors(found)
     if (Object.keys(found).length) {
@@ -33,6 +33,8 @@ export function ContactForm({ whatsapp, email, onOpenUrl }) {
       open(buildWhatsAppUrl(whatsapp, values.name, values.message), true)
       setStatus("Abrindo o WhatsApp em uma nova aba.")
       setPhase("loading")
+      timers.current.forEach(clearTimeout)
+      timers.current = []
       timers.current.push(
         setTimeout(() => {
           setPhase("success")

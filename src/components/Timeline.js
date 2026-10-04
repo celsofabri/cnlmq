@@ -36,7 +36,7 @@ export function Timeline({ items }) {
   return (
     <ol ref={ref} className="timeline">
       {items.map((item, i) => (
-        <Reveal as="li" key={item.label} className="timeline__item" variant={i % 2 ? "right" : "left"}>
+        <Reveal as="li" key={i} className="timeline__item" variant={i % 2 ? "right" : "left"}>
           <span className="timeline__node" aria-hidden="true" />
           <h3 className="timeline__label">{item.label}</h3>
           <p>{item.text}</p>

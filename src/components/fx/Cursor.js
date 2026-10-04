@@ -20,6 +20,17 @@ export function Cursor() {
     let rx = tx
     let ry = ty
     let raf = 0
+    const draw = () => {
+      if (glow.current) glow.current.style.transform = `translate3d(${tx - 300}px, ${ty - 300}px, 0)`
+      if (ring.current) ring.current.style.transform = `translate3d(${rx - 18}px, ${ry - 18}px, 0)`
+    }
+    // O loop só roda enquanto o anel ainda está alcançando o ponteiro; em repouso, para.
+    const loop = () => {
+      rx += (tx - rx) * 0.18
+      ry += (ty - ry) * 0.18
+      draw()
+      raf = Math.abs(tx - rx) + Math.abs(ty - ry) > 0.4 ? requestAnimationFrame(loop) : 0
+    }
     const onMove = (e) => {
       tx = e.clientX
       ty = e.clientY
@@ -27,21 +38,14 @@ export function Cursor() {
       if (ring.current) ring.current.style.opacity = "1"
       const interactive = e.target.closest && e.target.closest("a, button, input, textarea, [data-cursor]")
       if (ring.current) ring.current.dataset.active = interactive ? "true" : "false"
+      if (!raf) raf = requestAnimationFrame(loop)
     }
     const onLeave = () => {
       if (glow.current) glow.current.style.opacity = "0"
       if (ring.current) ring.current.style.opacity = "0"
     }
-    const loop = () => {
-      rx += (tx - rx) * 0.18
-      ry += (ty - ry) * 0.18
-      if (glow.current) glow.current.style.transform = `translate3d(${tx - 300}px, ${ty - 300}px, 0)`
-      if (ring.current) ring.current.style.transform = `translate3d(${rx - 18}px, ${ry - 18}px, 0)`
-      raf = requestAnimationFrame(loop)
-    }
     window.addEventListener("pointermove", onMove, { passive: true })
     document.documentElement.addEventListener("pointerleave", onLeave)
-    raf = requestAnimationFrame(loop)
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener("pointermove", onMove)

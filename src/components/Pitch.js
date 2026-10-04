@@ -9,6 +9,7 @@ const NAMES = Object.keys(FORMATIONS)
 /** Escalação interativa: campo SVG responsivo, jogadores clicáveis e formação alternável. */
 export function Pitch({ players }) {
   const [formation, setFormation] = useState(NAMES[0])
+  const [tipsOff, setTipsOff] = useState(false) // Escape dispensa o tooltip (WCAG 1.4.13)
   const { slots, bench } = buildLineup(players, formation)
 
   return (
@@ -24,7 +25,8 @@ export function Pitch({ players }) {
       <p className="visually-hidden" role="status">
         Formação {formation}: {slots.length} titulares e {bench.length} reservas.
       </p>
-      <div className="pitch">
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- só escuta Escape/ponteiro que borbulham dos links filhos */}
+      <div className="pitch" data-tips={tipsOff ? "off" : "on"} onKeyDown={(e) => e.key === "Escape" && setTipsOff(true)} onPointerMove={() => tipsOff && setTipsOff(false)} onFocus={() => tipsOff && setTipsOff(false)}>
         <svg className="pitch__svg" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true" focusable="false">
           <rect x="2" y="2" width="96" height="126" rx="2" className="pitch__line pitch__fill" />
           <line x1="2" y1="65" x2="98" y2="65" className="pitch__line" />
@@ -41,9 +43,14 @@ export function Pitch({ players }) {
           {slots.map(({ player, x, y }) => (
             <li key={player.slug} className="pitch__slot" style={{ left: `${x}%`, top: `${y}%` }}>
               <Link to={`/elenco/${player.slug}/`} className="pitch__player" data-cursor>
-                <Avatar initials={player.avatar.initials} bg={player.avatar.bg} size={52} />
+                <span className="pitch__avatar">
+                  <Avatar initials={player.avatar.initials} bg={player.avatar.bg} size={52} />
+                  <b className="pitch__badge" aria-hidden="true">
+                    {player.number}
+                  </b>
+                </span>
                 <span className="pitch__tag">
-                  <b>{player.number}</b> <span className="pitch__tag-name">{player.nickname}</span>
+                  <b className="pitch__tag-num">{player.number}</b> <span className="pitch__tag-name">{player.nickname}</span>
                 </span>
                 <span className="pitch__tip" aria-hidden="true">
                   <b>{player.name}</b>

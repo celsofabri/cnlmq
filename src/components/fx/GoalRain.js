@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { prefersReducedMotion } from "../../lib/motion"
 
 const ICONS = ["⚽", "🔥", "⚽", "🍕", "⚽"]
 
@@ -8,7 +9,8 @@ export function GoalRain({ active, onDone }) {
 
   useEffect(() => {
     if (!active) return undefined
-    setDrops( // eslint-disable-line react-hooks/set-state-in-effect -- aleatório só no cliente, após o gatilho
+    const reduced = prefersReducedMotion()
+    const make = () =>
       Array.from({ length: 36 }, (_, i) => ({
         id: i,
         icon: ICONS[i % ICONS.length],
@@ -17,11 +19,12 @@ export function GoalRain({ active, onDone }) {
         dur: 1800 + Math.random() * 1800,
         size: 1.4 + Math.random() * 1.6,
       }))
-    )
+    // aleatório só no cliente, após o gatilho; em movimento reduzido não há gotas
+    setDrops(reduced ? [] : make()) // eslint-disable-line react-hooks/set-state-in-effect
     const t = setTimeout(() => {
       setDrops([])
       if (onDone) onDone()
-    }, 4200)
+    }, reduced ? 2500 : 4200)
     return () => clearTimeout(t)
   }, [active, onDone])
 

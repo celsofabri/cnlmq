@@ -17,7 +17,10 @@ const NAV = [
 const currentProps = (to) => ({ isCurrent, isPartiallyCurrent }) =>
   (to === "/" ? isCurrent : isPartiallyCurrent) ? { "aria-current": "page" } : {}
 
-export function Layout({ children }) {
+// Mesmo breakpoint do global.css (menu em tela cheia abaixo disso)
+const DESKTOP_QUERY = "(min-width: 820px)"
+
+export function Layout({ children, pathname }) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [goal, setGoal] = useState(false)
@@ -39,7 +42,7 @@ export function Layout({ children }) {
     }
   }, [])
 
-  // Menu em tela cheia: Escape fecha e devolve o foco; trava o scroll do fundo
+  // Menu em tela cheia: Escape fecha e devolve o foco; trava o scroll do fundo (só no mobile, via CSS)
   useEffect(() => {
     if (!open) return undefined
     const onKey = (e) => {
@@ -56,8 +59,27 @@ export function Layout({ children }) {
     }
   }, [open])
 
+  // Ao passar para o layout desktop o menu fecha (e o scroll nunca fica travado)
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return undefined
+    const mq = window.matchMedia(DESKTOP_QUERY)
+    const onChange = (e) => e.matches && setOpen(false)
+    if (mq.addEventListener) mq.addEventListener("change", onChange)
+    else mq.addListener(onChange)
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", onChange)
+      else mq.removeListener(onChange)
+    }
+  }, [])
+
+  // Troca de rota fecha o menu
+  useEffect(() => {
+    setOpen(false) // eslint-disable-line react-hooks/set-state-in-effect -- reage à navegação
+  }, [pathname])
+
   // Easter egg: 5 cliques no logo em 3s
   const onBrandClick = () => {
+    setOpen(false)
     const now = Date.now()
     const c = clicks.current
     c.n = now - c.t > 3000 ? 1 : c.n + 1
@@ -116,10 +138,10 @@ export function Layout({ children }) {
           </nav>
         </div>
       </header>
-      <main id="conteudo" tabIndex={-1}>
+      <main id="conteudo" tabIndex={-1} inert={open ? "" : undefined}>
         {children}
       </main>
-      <footer className="site-footer">
+      <footer className="site-footer" inert={open ? "" : undefined}>
         <Marquee items={[club.name, club.motto, `Desde ${club.foundedYear}`]} outline label="Lema do clube" />
         <div className="container">
           <p className="site-footer__giant" aria-hidden="true">
