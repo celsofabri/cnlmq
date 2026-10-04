@@ -53,3 +53,10 @@ export function getSeasonSummary(matches) {
 
 export const competitionLabel = (m) =>
   m.competition === "campeonato" ? m.competitionName || "Campeonato" : "Amistoso"
+
+/** Últimos n resultados em ordem cronológica (mais antigo primeiro): ["V","E","D",...]. */
+export const getForm = (matches, n = 5) =>
+  getResults(matches)
+    .slice(0, n)
+    .reverse()
+    .map(getOutcome)

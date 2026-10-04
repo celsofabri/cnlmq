@@ -1,9 +1,13 @@
 const React = require("react")
 const gatsby = jest.requireActual("gatsby")
 
-// eslint-disable-next-line no-unused-vars
-const Link = ({ to, activeClassName, partiallyActive, getProps, ...rest }) =>
-  React.createElement("a", { ...rest, href: `/cnlmq${to}` })
+const Link = React.forwardRef(function Link(
+  // eslint-disable-next-line no-unused-vars
+  { to, activeClassName, partiallyActive, getProps, ...rest },
+  ref
+) {
+  return React.createElement("a", { ...rest, ref, href: `/cnlmq${to}` })
+})
 
 module.exports = {
   ...gatsby,

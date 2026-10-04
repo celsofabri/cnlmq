@@ -1,16 +1,26 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
+import { Confetti } from "./fx/Confetti"
 import { buildMailtoUrl, buildWhatsAppUrl, validateContact } from "../lib/contact"
+
+const BTN_LABEL = { idle: "Chamar no WhatsApp", loading: "Abrindo...", success: "Mandou bem!" }
 
 export function ContactForm({ whatsapp, email, onOpenUrl }) {
   const [values, setValues] = useState({ name: "", message: "" })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState("")
+  const [phase, setPhase] = useState("idle")
+  const [burst, setBurst] = useState(0)
+  const timers = useRef([])
+
+  useEffect(() => {
+    return () => timers.current.forEach(clearTimeout)
+  }, [])
 
   const open = onOpenUrl || ((url, external) => (external ? window.open(url, "_blank", "noopener,noreferrer") : (window.location.href = url)))
-
   const set = (key) => (e) => setValues((v) => ({ ...v, [key]: e.target.value }))
 
   const submit = (kind) => {
+    if (kind === "whatsapp" && phase !== "idle") return // evita abrir duas abas
     const found = validateContact(values)
     setErrors(found)
     if (Object.keys(found).length) {
@@ -22,6 +32,17 @@ export function ContactForm({ whatsapp, email, onOpenUrl }) {
     if (kind === "whatsapp") {
       open(buildWhatsAppUrl(whatsapp, values.name, values.message), true)
       setStatus("Abrindo o WhatsApp em uma nova aba.")
+      setPhase("loading")
+      timers.current.forEach(clearTimeout)
+      timers.current = []
+      timers.current.push(
+        setTimeout(() => {
+          setPhase("success")
+          setBurst((b) => b + 1)
+          setStatus("Pronto! O WhatsApp foi aberto com a sua mensagem.")
+        }, 700),
+        setTimeout(() => setPhase("idle"), 3600)
+      )
     } else {
       const mailto = buildMailtoUrl(email, values.name, values.message)
       if (!mailto) {
@@ -33,57 +54,53 @@ export function ContactForm({ whatsapp, email, onOpenUrl }) {
     }
   }
 
+  const field = (id, key, label, Tag = "input") => (
+    <div className={`field${values[key] ? " has-value" : ""}${errors[key] ? " has-error" : ""}`}>
+      <Tag
+        id={id}
+        name={key}
+        placeholder=" "
+        autoComplete={key === "name" ? "name" : undefined}
+        value={values[key]}
+        onChange={set(key)}
+        aria-invalid={errors[key] ? "true" : undefined}
+        aria-describedby={errors[key] ? `${id}-erro` : undefined}
+      />
+      <label htmlFor={id}>{label}</label>
+      <span className="field__bar" aria-hidden="true" />
+      {errors[key] && (
+        <p id={`${id}-erro`} className="field__error">
+          {errors[key]}
+        </p>
+      )}
+    </div>
+  )
+
   return (
     <form
-      className="form"
+      className="form glass"
       noValidate
       onSubmit={(e) => {
         e.preventDefault()
         submit("whatsapp")
       }}
     >
-      <div className="field">
-        <label htmlFor="contato-nome">Seu nome</label>
-        <input
-          id="contato-nome"
-          name="name"
-          autoComplete="name"
-          value={values.name}
-          onChange={set("name")}
-          aria-invalid={errors.name ? "true" : undefined}
-          aria-describedby={errors.name ? "contato-nome-erro" : undefined}
-        />
-        {errors.name && (
-          <p id="contato-nome-erro" className="field__error">
-            {errors.name}
-          </p>
-        )}
-      </div>
-      <div className="field">
-        <label htmlFor="contato-mensagem">Mensagem</label>
-        <textarea
-          id="contato-mensagem"
-          name="message"
-          value={values.message}
-          onChange={set("message")}
-          aria-invalid={errors.message ? "true" : undefined}
-          aria-describedby={errors.message ? "contato-mensagem-erro" : undefined}
-        />
-        {errors.message && (
-          <p id="contato-mensagem-erro" className="field__error">
-            {errors.message}
-          </p>
-        )}
-      </div>
+      <Confetti burst={burst} />
+      {field("contato-nome", "name", "Seu nome")}
+      {field("contato-mensagem", "message", "Mensagem", "textarea")}
       <div className="btn-row">
-        <button type="submit" className="btn btn--whatsapp">
-          Chamar no WhatsApp
+        <button type="submit" className={`btn btn--whats btn--${phase}`} disabled={phase === "loading"}>
+          <span className="btn__spinner" aria-hidden="true" />
+          <span className="btn__check" aria-hidden="true">
+            ✓
+          </span>
+          {BTN_LABEL[phase]}
         </button>
-        <button type="button" className="btn btn--ghost" onClick={() => submit("email")}>
+        <button type="button" className="btn btn--outline" onClick={() => submit("email")}>
           Enviar por e-mail
         </button>
       </div>
-      <p role="status" aria-live="polite" className="muted">
+      <p role="status" aria-live="polite" className="muted form__status">
         {status}
       </p>
     </form>

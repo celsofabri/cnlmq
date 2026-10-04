@@ -1,6 +1,9 @@
 import React, { useState } from "react"
+import { AnimatePresence, m } from "framer-motion"
+import { MotionRoot } from "./MotionRoot"
 import { MatchCard } from "./MatchCard"
 import { filterByCompetition, getAwaitingResult, getResults, getUpcoming } from "../lib/matches"
+import { formatDate } from "../lib/format"
 
 const FILTERS = [
   { value: "todos", label: "Todos" },
@@ -8,7 +11,15 @@ const FILTERS = [
   { value: "campeonato", label: "Campeonato" },
 ]
 
-export function GamesBrowser({ matches, now }) {
+const item = {
+  layout: true,
+  initial: { opacity: 0, y: 24, scale: 0.97 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, scale: 0.94 },
+  transition: { type: "spring", stiffness: 260, damping: 28 },
+}
+
+function GamesBrowserInner({ matches, now }) {
   const [filter, setFilter] = useState("todos")
   const visible = filterByCompetition(matches, filter)
   const upcoming = getUpcoming(visible, now)
@@ -21,7 +32,8 @@ export function GamesBrowser({ matches, now }) {
         <legend>Filtrar por tipo de jogo</legend>
         {FILTERS.map((f) => (
           <button key={f.value} type="button" className="chip" aria-pressed={filter === f.value} onClick={() => setFilter(f.value)}>
-            {f.label}
+            {filter === f.value && <m.span layoutId="chip-games" className="chip__bg" transition={{ type: "spring", stiffness: 380, damping: 30 }} />}
+            <span className="chip__text">{f.label}</span>
           </button>
         ))}
       </fieldset>
@@ -30,14 +42,18 @@ export function GamesBrowser({ matches, now }) {
       </p>
 
       <section aria-labelledby="proximos" className="group">
-        <h2 id="proximos">Próximos jogos</h2>
+        <h2 id="proximos" className="display display--md">
+          Próximos jogos
+        </h2>
         {upcoming.length ? (
-          <ul className="list">
-            {upcoming.map((m) => (
-              <li key={m.id}>
-                <MatchCard match={m} />
-              </li>
-            ))}
+          <ul className="list list--cards">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {upcoming.map((mt) => (
+                <m.li key={mt.id} {...item}>
+                  <MatchCard match={mt} highlight={mt.id === upcoming[0].id} />
+                </m.li>
+              ))}
+            </AnimatePresence>
           </ul>
         ) : (
           <p className="muted">Nenhum jogo marcado nessa categoria. O time está em intensa preparação (descansando).</p>
@@ -46,11 +62,13 @@ export function GamesBrowser({ matches, now }) {
 
       {awaiting.length > 0 && (
         <section aria-labelledby="aguardando" className="group">
-          <h2 id="aguardando">Aguardando placar</h2>
-          <ul className="list">
-            {awaiting.map((m) => (
-              <li key={m.id}>
-                <MatchCard match={m} />
+          <h2 id="aguardando" className="display display--md">
+            Aguardando placar
+          </h2>
+          <ul className="list list--cards">
+            {awaiting.map((mt) => (
+              <li key={mt.id}>
+                <MatchCard match={mt} />
               </li>
             ))}
           </ul>
@@ -58,19 +76,33 @@ export function GamesBrowser({ matches, now }) {
       )}
 
       <section aria-labelledby="resultados" className="group">
-        <h2 id="resultados">Resultados</h2>
+        <h2 id="resultados" className="display display--md">
+          Resultados
+        </h2>
         {results.length ? (
-          <ul className="list">
-            {results.map((m) => (
-              <li key={m.id}>
-                <MatchCard match={m} />
-              </li>
-            ))}
-          </ul>
+          <ol className="rtimeline">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {results.map((mt) => (
+                <m.li key={mt.id} className="rtimeline__item" {...item}>
+                  <span className="rtimeline__date">{formatDate(mt.date)}</span>
+                  <span className="rtimeline__node" aria-hidden="true" />
+                  <MatchCard match={mt} />
+                </m.li>
+              ))}
+            </AnimatePresence>
+          </ol>
         ) : (
           <p className="muted">Nenhum resultado nessa categoria ainda.</p>
         )}
       </section>
     </>
+  )
+}
+
+export function GamesBrowser(props) {
+  return (
+    <MotionRoot>
+      <GamesBrowserInner {...props} />
+    </MotionRoot>
   )
 }

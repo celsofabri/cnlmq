@@ -1,16 +1,16 @@
 import React from "react"
-import { Layout } from "../components/Layout"
 import { Seo } from "../components/Seo"
 import { RosterBrowser } from "../components/RosterBrowser"
 import { players } from "../lib/data"
 
 export default function RosterPage() {
   return (
-    <Layout>
-      <div className="page-title">
+    <>
+      <div className="page-hero">
         <div className="container">
-          <h1>Elenco</h1>
-          <p className="lead">{players.length} craques (segundo eles mesmos).</p>
+          <p className="eyebrow">{players.length} craques (segundo eles mesmos)</p>
+          <h1 className="display display--xl">Elenco</h1>
+          <p className="lead">Passe o mouse nas figurinhas ou monte a escalação no campo.</p>
         </div>
       </div>
       <div className="section">
@@ -18,7 +18,7 @@ export default function RosterPage() {
           <RosterBrowser players={players} />
         </div>
       </div>
-    </Layout>
+    </>
   )
 }
 

@@ -8,6 +8,7 @@ const INSTAGRAM_RE = /^@?[A-Za-z0-9._]{1,30}$/
 const HEX_RE = /^#[0-9a-fA-F]{6}$/
 const ISO_OFFSET_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)$/
 
+const ATTRIBUTE_KEYS = ["pace", "shooting", "passing", "defending", "physical", "heart"]
 const POSITIONS = ["goleiro", "defensor", "meio-campista", "atacante"]
 const FEET = ["direito", "esquerdo", "ambidestro"]
 const COMPETITIONS = ["amistoso", "campeonato"]
@@ -35,6 +36,19 @@ function validateClub(club) {
   }
   if (!Array.isArray(club.history) || club.history.length === 0 || !club.history.every(isNonEmptyString)) {
     e('"history" deve ser uma lista de parágrafos não vazios')
+  }
+  if (club.historyLabels != null) {
+    const labels = club.historyLabels
+    if (!Array.isArray(labels) || !labels.every(isNonEmptyString)) e('"historyLabels" deve ser uma lista de textos')
+    else {
+      if (Array.isArray(club.history) && labels.length > club.history.length) {
+        e('"historyLabels" não pode ter mais itens que "history"')
+      }
+      if (new Set(labels).size !== labels.length) e('"historyLabels" não pode ter rótulos repetidos')
+    }
+  }
+  if (club.sponsors != null && (!Array.isArray(club.sponsors) || club.sponsors.length === 0 || !club.sponsors.every(isNonEmptyString))) {
+    e('"sponsors" deve ter ao menos 1 texto (ou omita o campo)')
   }
   const c = club.contact
   if (!isObject(c)) e('"contact" é obrigatório')
@@ -77,8 +91,17 @@ function validatePlayers(players) {
         e("stats deve ter games, goals e assists inteiros >= 0")
       }
     }
-    const a = p.avatar
-    if (!isObject(a) || a.type !== "generated" || !HEX_RE.test(String(a.bg)) || !/^\p{L}{1,3}$/u.test(String(a.initials))) {
+    if (p.attributes != null) {
+      const a = p.attributes
+      const unknown = isObject(a) ? Object.keys(a).filter((k) => !ATTRIBUTE_KEYS.includes(k)) : []
+      if (!isObject(a) || !ATTRIBUTE_KEYS.every((k) => Number.isInteger(a[k]) && a[k] >= 0 && a[k] <= 99)) {
+        e(`attributes deve ter ${ATTRIBUTE_KEYS.join(", ")} inteiros entre 0 e 99`)
+      } else if (unknown.length) {
+        e(`attributes tem chaves desconhecidas: ${unknown.join(", ")}`)
+      }
+    }
+    const av = p.avatar
+    if (!isObject(av) || av.type !== "generated" || !HEX_RE.test(String(av.bg)) || !/^\p{L}{1,3}$/u.test(String(av.initials))) {
       e('avatar deve ser { type: "generated", bg: "#hex", initials: "XX" }')
     }
   })
@@ -122,4 +145,4 @@ function validateAll({ club, players, matches }) {
   return [...validateClub(club), ...validatePlayers(players), ...validateMatches(matches)]
 }
 
-module.exports = { INSTAGRAM_RE, validateClub, validatePlayers, validateMatches, validateAll, POSITIONS }
+module.exports = { INSTAGRAM_RE, validateClub, validatePlayers, validateMatches, validateAll, POSITIONS, ATTRIBUTE_KEYS }
