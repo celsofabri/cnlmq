@@ -336,7 +336,10 @@
   .hero__logo, .hero__flame, .marquee__track, .scroll-hint__mouse::after, .notfound__code, .goal-rain__drop { animation: none !important; }
   .marquee__track { width: auto; flex-wrap: wrap; }
   .marquee__group[aria-hidden="true"], .marquee__row[aria-hidden="true"] { display: none; }
-  .marquee__group, .marquee__row { flex-wrap: wrap; }
+  .marquee__track { width: 100%; }
+  .marquee__group { flex: 1 1 100%; min-width: 0; }
+  .marquee__group, .marquee__row { flex-wrap: wrap; max-width: 100%; }
+  .marquee__row li { white-space: normal; }
   .hero__copy, .hero__logo-wrap { transform: none; }
   .fcard, .mcard { transform: none; }
 }

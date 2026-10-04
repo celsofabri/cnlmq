@@ -62,7 +62,7 @@ ul, ol { padding: 0; }
 }
 
 .container { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 20px; }
-.section { padding: clamp(2.2rem, 7vw, 6rem) 0; position: relative; }
+.section { padding: clamp(2.2rem, 7vw, 6rem) 0; position: relative; overflow-x: clip; }
 .muted { color: var(--muted); }
 .small { font-size: 0.9rem; }
 .lead { font-size: clamp(1.1rem, 2.4vw, 1.35rem); max-width: 60ch; }
