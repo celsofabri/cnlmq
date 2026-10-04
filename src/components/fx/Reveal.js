@@ -1,9 +1,41 @@
 import React, { useEffect, useRef } from "react"
 import { prefersReducedMotion } from "../../lib/motion"
 
+// Um único IntersectionObserver para todos os elementos (evita leituras de layout em cascata).
+let observer = null
+const seen = new WeakSet()
+
+function getObserver() {
+  if (!observer) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const el = entry.target
+          if (!seen.has(el)) {
+            // Primeira notificação: o que já está na tela fica como está (sem piscar); o resto é escondido.
+            seen.add(el)
+            if (entry.isIntersecting) {
+              observer.unobserve(el)
+              return
+            }
+            el.classList.add("reveal-pending")
+            return
+          }
+          if (entry.isIntersecting) {
+            el.classList.add("reveal-in")
+            observer.unobserve(el)
+          }
+        })
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" }
+    )
+  }
+  return observer
+}
+
 /**
- * Scroll-reveal progressivo: o conteúdo é renderizado visível (SSR/sem JS/movimento reduzido).
- * Depois de montar, só o que está abaixo da dobra é escondido e revelado ao entrar na tela.
+ * Scroll-reveal progressivo: renderizado visível (SSR/sem JS/movimento reduzido); depois de montar,
+ * só o que está abaixo da dobra é escondido e revelado ao entrar na tela.
  */
 export function Reveal({ as: Tag = "div", variant = "up", delay = 0, className = "", style, children, ...rest }) {
   const ref = useRef(null)
@@ -11,20 +43,12 @@ export function Reveal({ as: Tag = "div", variant = "up", delay = 0, className =
   useEffect(() => {
     const el = ref.current
     if (!el || prefersReducedMotion() || typeof IntersectionObserver === "undefined") return undefined
-    const rect = el.getBoundingClientRect()
-    if (rect.top < window.innerHeight * 0.92) return undefined
-    el.classList.add("reveal-pending")
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add("reveal-in")
-          io.disconnect()
-        }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" }
-    )
+    const io = getObserver()
     io.observe(el)
-    return () => io.disconnect()
+    return () => {
+      io.unobserve(el)
+      seen.delete(el)
+    }
   }, [])
 
   return (

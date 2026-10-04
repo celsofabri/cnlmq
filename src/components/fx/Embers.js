@@ -14,6 +14,7 @@ export function Embers({ density = 1 }) {
     let h = 0
     let raf = 0
     let running = false
+    let ready = false
     let visible = true
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
     let particles = []
@@ -35,7 +36,7 @@ export function Embers({ density = 1 }) {
       canvas.width = w * dpr
       canvas.height = h * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      const count = Math.round(Math.min(46, Math.max(14, w / 28)) * density)
+      const count = Math.round(Math.min(36, Math.max(12, w / 36)) * density)
       particles = Array.from({ length: count }, () => make(true))
     }
 
@@ -46,10 +47,13 @@ export function Embers({ density = 1 }) {
         p.x += p.vx + Math.sin(t / 900 + p.phase) * 0.25
         const fade = Math.min(1, p.y / (h * 0.5))
         const alpha = Math.max(0, fade) * (0.45 + 0.4 * Math.sin(t / 400 + p.phase))
+        const rgb = p.warm ? "255, 176, 46" : "92, 179, 240"
         ctx.beginPath()
-        ctx.fillStyle = p.warm ? `rgba(255, 176, 46, ${alpha})` : `rgba(92, 179, 240, ${alpha})`
-        ctx.shadowColor = p.warm ? "rgba(255, 140, 20, 0.9)" : "rgba(0, 113, 188, 0.9)"
-        ctx.shadowBlur = 10
+        ctx.fillStyle = `rgba(${rgb}, ${alpha * 0.22})`
+        ctx.arc(p.x, p.y, p.r * 3.2, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.beginPath()
+        ctx.fillStyle = `rgba(${rgb}, ${alpha})`
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
         ctx.fill()
         if (p.y < -10) particles[i] = make(false)
@@ -58,7 +62,7 @@ export function Embers({ density = 1 }) {
     }
 
     const start = () => {
-      if (running || !visible || document.hidden) return
+      if (running || !ready || !visible || document.hidden) return
       running = true
       raf = requestAnimationFrame(frame)
     }
@@ -80,8 +84,13 @@ export function Embers({ density = 1 }) {
     if (io) io.observe(canvas)
     const onVis = () => (document.hidden ? stop() : start())
     document.addEventListener("visibilitychange", onVis)
-    start()
+    // começa depois da hidratação, para não competir com o JS inicial
+    const kick = window.setTimeout(() => {
+      ready = true
+      start()
+    }, 800)
     return () => {
+      window.clearTimeout(kick)
       stop()
       if (ro) ro.disconnect()
       if (io) io.disconnect()

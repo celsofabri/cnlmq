@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { AnimatePresence, m } from "framer-motion"
+import { MotionRoot } from "./MotionRoot"
 import { MatchCard } from "./MatchCard"
 import { filterByCompetition, getAwaitingResult, getResults, getUpcoming } from "../lib/matches"
 import { formatDate } from "../lib/format"
@@ -18,7 +19,7 @@ const item = {
   transition: { type: "spring", stiffness: 260, damping: 28 },
 }
 
-export function GamesBrowser({ matches, now }) {
+function GamesBrowserInner({ matches, now }) {
   const [filter, setFilter] = useState("todos")
   const visible = filterByCompetition(matches, filter)
   const upcoming = getUpcoming(visible, now)
@@ -95,5 +96,13 @@ export function GamesBrowser({ matches, now }) {
         )}
       </section>
     </>
+  )
+}
+
+export function GamesBrowser(props) {
+  return (
+    <MotionRoot>
+      <GamesBrowserInner {...props} />
+    </MotionRoot>
   )
 }

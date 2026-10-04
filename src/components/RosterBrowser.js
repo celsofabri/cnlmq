@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { AnimatePresence, m } from "framer-motion"
+import { MotionRoot } from "./MotionRoot"
 import { PlayerCard } from "./PlayerCard"
 import { Pitch } from "./Pitch"
 import { POSITIONS, filterByPosition, groupByPosition } from "../lib/players"
@@ -11,7 +12,7 @@ const VIEWS = [
 
 const spring = { type: "spring", stiffness: 260, damping: 28 }
 
-export function RosterBrowser({ players }) {
+function RosterBrowserInner({ players }) {
   const [view, setView] = useState("cartas")
   const [position, setPosition] = useState("todos")
   const groups = groupByPosition(filterByPosition(players, position))
@@ -74,5 +75,13 @@ export function RosterBrowser({ players }) {
         </>
       )}
     </>
+  )
+}
+
+export function RosterBrowser(props) {
+  return (
+    <MotionRoot>
+      <RosterBrowserInner {...props} />
+    </MotionRoot>
   )
 }
