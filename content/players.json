@@ -19,6 +19,14 @@
       "type": "generated",
       "bg": "#0071bc",
       "initials": "PA"
+    },
+    "attributes": {
+      "pace": 47,
+      "shooting": 29,
+      "passing": 45,
+      "defending": 90,
+      "physical": 66,
+      "heart": 79
     }
   },
   {
@@ -41,6 +49,14 @@
       "type": "generated",
       "bg": "#998675",
       "initials": "LP"
+    },
+    "attributes": {
+      "pace": 46,
+      "shooting": 26,
+      "passing": 54,
+      "defending": 78,
+      "physical": 77,
+      "heart": 73
     }
   },
   {
@@ -63,6 +79,14 @@
       "type": "generated",
       "bg": "#4c4931",
       "initials": "MU"
+    },
+    "attributes": {
+      "pace": 58,
+      "shooting": 47,
+      "passing": 53,
+      "defending": 74,
+      "physical": 61,
+      "heart": 82
     }
   },
   {
@@ -85,6 +109,14 @@
       "type": "generated",
       "bg": "#0071bc",
       "initials": "XE"
+    },
+    "attributes": {
+      "pace": 61,
+      "shooting": 43,
+      "passing": 54,
+      "defending": 83,
+      "physical": 74,
+      "heart": 79
     }
   },
   {
@@ -107,6 +139,14 @@
       "type": "generated",
       "bg": "#c7b299",
       "initials": "TU"
+    },
+    "attributes": {
+      "pace": 88,
+      "shooting": 35,
+      "passing": 64,
+      "defending": 82,
+      "physical": 74,
+      "heart": 74
     }
   },
   {
@@ -129,6 +169,14 @@
       "type": "generated",
       "bg": "#616054",
       "initials": "CA"
+    },
+    "attributes": {
+      "pace": 58,
+      "shooting": 41,
+      "passing": 67,
+      "defending": 78,
+      "physical": 75,
+      "heart": 78
     }
   },
   {
@@ -151,6 +199,14 @@
       "type": "generated",
       "bg": "#0071bc",
       "initials": "MA"
+    },
+    "attributes": {
+      "pace": 59,
+      "shooting": 62,
+      "passing": 91,
+      "defending": 59,
+      "physical": 52,
+      "heart": 65
     }
   },
   {
@@ -173,6 +229,14 @@
       "type": "generated",
       "bg": "#998675",
       "initials": "PU"
+    },
+    "attributes": {
+      "pace": 62,
+      "shooting": 64,
+      "passing": 80,
+      "defending": 51,
+      "physical": 88,
+      "heart": 90
     }
   },
   {
@@ -195,6 +259,14 @@
       "type": "generated",
       "bg": "#4c4931",
       "initials": "CL"
+    },
+    "attributes": {
+      "pace": 62,
+      "shooting": 65,
+      "passing": 86,
+      "defending": 54,
+      "physical": 56,
+      "heart": 71
     }
   },
   {
@@ -217,6 +289,14 @@
       "type": "generated",
       "bg": "#c7b299",
       "initials": "RE"
+    },
+    "attributes": {
+      "pace": 90,
+      "shooting": 72,
+      "passing": 82,
+      "defending": 63,
+      "physical": 52,
+      "heart": 68
     }
   },
   {
@@ -239,6 +319,14 @@
       "type": "generated",
       "bg": "#0071bc",
       "initials": "MT"
+    },
+    "attributes": {
+      "pace": 66,
+      "shooting": 92,
+      "passing": 58,
+      "defending": 33,
+      "physical": 61,
+      "heart": 71
     }
   },
   {
@@ -261,6 +349,14 @@
       "type": "generated",
       "bg": "#998675",
       "initials": "GP"
+    },
+    "attributes": {
+      "pace": 72,
+      "shooting": 90,
+      "passing": 62,
+      "defending": 36,
+      "physical": 67,
+      "heart": 77
     }
   },
   {
@@ -283,6 +379,14 @@
       "type": "generated",
       "bg": "#616054",
       "initials": "CB"
+    },
+    "attributes": {
+      "pace": 70,
+      "shooting": 85,
+      "passing": 65,
+      "defending": 29,
+      "physical": 49,
+      "heart": 76
     }
   },
   {
@@ -305,6 +409,14 @@
       "type": "generated",
       "bg": "#4c4931",
       "initials": "CO"
+    },
+    "attributes": {
+      "pace": 69,
+      "shooting": 88,
+      "passing": 63,
+      "defending": 28,
+      "physical": 68,
+      "heart": 75
     }
   }
 ]

@@ -8,6 +8,7 @@ const INSTAGRAM_RE = /^@?[A-Za-z0-9._]{1,30}$/
 const HEX_RE = /^#[0-9a-fA-F]{6}$/
 const ISO_OFFSET_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)$/
 
+const ATTRIBUTE_KEYS = ["pace", "shooting", "passing", "defending", "physical", "heart"]
 const POSITIONS = ["goleiro", "defensor", "meio-campista", "atacante"]
 const FEET = ["direito", "esquerdo", "ambidestro"]
 const COMPETITIONS = ["amistoso", "campeonato"]
@@ -35,6 +36,12 @@ function validateClub(club) {
   }
   if (!Array.isArray(club.history) || club.history.length === 0 || !club.history.every(isNonEmptyString)) {
     e('"history" deve ser uma lista de parágrafos não vazios')
+  }
+  if (club.historyLabels != null && (!Array.isArray(club.historyLabels) || !club.historyLabels.every(isNonEmptyString))) {
+    e('"historyLabels" deve ser uma lista de textos')
+  }
+  if (club.sponsors != null && (!Array.isArray(club.sponsors) || !club.sponsors.every(isNonEmptyString))) {
+    e('"sponsors" deve ser uma lista de textos')
   }
   const c = club.contact
   if (!isObject(c)) e('"contact" é obrigatório')
@@ -75,6 +82,11 @@ function validatePlayers(players) {
     if (p.stats != null) {
       if (!isObject(p.stats) || !["games", "goals", "assists"].every((k) => isNonNegInt(p.stats[k]))) {
         e("stats deve ter games, goals e assists inteiros >= 0")
+      }
+    }
+    if (p.attributes != null) {
+      if (!isObject(p.attributes) || !ATTRIBUTE_KEYS.every((k) => Number.isInteger(p.attributes[k]) && p.attributes[k] >= 0 && p.attributes[k] <= 99)) {
+        e(`attributes deve ter ${ATTRIBUTE_KEYS.join(", ")} inteiros entre 0 e 99`)
       }
     }
     const a = p.avatar
@@ -122,4 +134,4 @@ function validateAll({ club, players, matches }) {
   return [...validateClub(club), ...validatePlayers(players), ...validateMatches(matches)]
 }
 
-module.exports = { INSTAGRAM_RE, validateClub, validatePlayers, validateMatches, validateAll, POSITIONS }
+module.exports = { INSTAGRAM_RE, validateClub, validatePlayers, validateMatches, validateAll, POSITIONS, ATTRIBUTE_KEYS }

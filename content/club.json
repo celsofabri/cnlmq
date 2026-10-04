@@ -22,5 +22,17 @@
   "colors": {
     "primary": "#0071bc",
     "secondary": "#c7b299"
-  }
+  },
+  "historyLabels": [
+    "2014 · A sala de aula",
+    "O nome (um acordo de bar)",
+    "Hoje · Joelhos reclamando"
+  ],
+  "sponsors": [
+    "Pastelaria do Zé (fictício)",
+    "Guaraná Gelado Ltda. (fictício)",
+    "Churrasquinho da Esquina (fictício)",
+    "Bar que fecha cedo (fictício)",
+    "Lavanderia Camisa 10 (fictício)"
+  ]
 }
